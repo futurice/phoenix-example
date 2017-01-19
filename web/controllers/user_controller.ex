@@ -34,7 +34,7 @@ defmodule Blog.UserController do
     else
       conn
       |> put_flash(:error, "You must be logged in to access that page.")
-      |> redirect(to: user_path(conn, :new))
+      |> redirect(to: session_path(conn, :new))
       |> halt()
     end
   end
