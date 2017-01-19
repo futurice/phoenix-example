@@ -19,6 +19,7 @@ defmodule Blog.Router do
 
     get "/", PostController, :index
     resources "/users", UserController, only: [:index, :new, :create]
+    resources "/sessions", SessionController, only: [:new, :create, :delete]
   end
 
   # Other scopes may use custom stacks.
