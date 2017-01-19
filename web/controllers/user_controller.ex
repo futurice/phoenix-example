@@ -20,6 +20,7 @@ defmodule Blog.UserController do
     case Repo.insert(changeset) do
       {:ok, user} ->
         conn
+        |> Blog.Auth.login(user)
         |> put_flash(:info, "#{user.name} created!")
         |> redirect(to: user_path(conn, :index))
       {:error, changeset} ->
