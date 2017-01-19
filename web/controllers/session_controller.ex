@@ -18,6 +18,12 @@ defmodule Blog.SessionController do
     end
   end
 
+  def delete(conn, _) do
+    conn
+    |> Blog.Auth.logout()
+    |> redirect(to: post_path(conn, :index))
+  end
+
   defp error_message(reason) do
     case reason do
       :unauthorized ->
