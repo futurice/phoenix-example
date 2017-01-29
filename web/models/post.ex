@@ -17,5 +17,6 @@ defmodule Blog.Post do
     struct
     |> cast(params, [:title, :body, :category_id])
     |> validate_required([:title, :body])
+    |> assoc_constraint(:category)
   end
 end
