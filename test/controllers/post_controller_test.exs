@@ -1,5 +1,11 @@
 defmodule Blog.PostControllerTest do
   use Blog.ConnCase
+  alias Blog.Post
+
+  @valid_attrs %{title: "Post Title", body: "Post body"}
+  @invalid_attrs %{title: "invalid"}
+
+  defp post_count(query), do: Repo.one(from p in query, select: count(p.id))
 
   setup %{conn: conn} = config do
     if username = config[:login_as] do
@@ -36,5 +42,20 @@ defmodule Blog.PostControllerTest do
     assert html_response(conn, 200) =~ ~r/Listing posts/
     assert String.contains?(conn.resp_body, user_post.title)
     refute String.contains?(conn.resp_body, other_post.title)
+  end
+
+  @tag login_as: "max"
+  test "creates a post with the correct author and redirects", %{conn: conn, user: user} do
+    conn = post conn, post_path(conn, :create), post: @valid_attrs
+    assert redirected_to(conn) == post_path(conn, :index)
+    assert Repo.get_by!(Post, @valid_attrs).author_id == user.id
+  end
+
+  @tag login_as: "max"
+  test "does not create the post and renders errors when invalid", %{conn: conn} do
+    count_before = post_count(Post)
+    conn = post conn, post_path(conn, :create), post: @invalid_attrs
+    assert html_response(conn, 200) =~ "check the errors"
+    assert post_count(Post) == count_before
   end
 end
