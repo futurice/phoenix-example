@@ -1,7 +1,10 @@
 defmodule Blog.PostController do
   use Blog.Web, :controller
 
+  alias Blog.Category
   alias Blog.Post
+
+  plug :load_categories when action in [:new, :create, :edit, :update]
 
   # Add current_user as argument to all action calls
   def action(conn, _) do
@@ -80,5 +83,14 @@ defmodule Blog.PostController do
 
   defp user_posts(user) do
     assoc(user, :posts)
+  end
+
+  defp load_categories(conn, _) do
+    query =
+      Category
+      |> Category.alphabetical
+      |> Category.names_and_ids
+    categories = Repo.all query
+    assign(conn, :categories, categories)
   end
 end
