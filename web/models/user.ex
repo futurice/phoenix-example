@@ -6,6 +6,7 @@ defmodule Blog.User do
     field :username, :string
     field :password, :string, virtual: true
     field :password_hash, :string
+    has_many :posts, Blog.Post, foreign_key: :author_id
 
     timestamps()
   end

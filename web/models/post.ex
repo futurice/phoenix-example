@@ -4,6 +4,7 @@ defmodule Blog.Post do
   schema "posts" do
     field :title, :string
     field :body, :string
+    belongs_to :author, Blog.User
 
     timestamps()
   end
