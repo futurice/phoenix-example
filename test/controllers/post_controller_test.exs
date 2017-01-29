@@ -33,6 +33,26 @@ defmodule Blog.PostControllerTest do
   end
 
   @tag login_as: "max"
+  test "authorizes actions against foreign access", %{user: owner, conn: conn} do
+    post = insert_post(owner, @valid_attrs)
+    non_owner = insert_user(username: "sneaky")
+    conn = assign(conn, :current_user, non_owner)
+
+    assert_error_sent :not_found, fn ->
+      get(conn, post_path(conn, :show, post))
+    end
+    assert_error_sent :not_found, fn ->
+      get(conn, post_path(conn, :edit, post))
+    end
+    assert_error_sent :not_found, fn ->
+      get(conn, post_path(conn, :update, post, post: @valid_attrs))
+    end
+    assert_error_sent :not_found, fn ->
+      get(conn, post_path(conn, :delete, post))
+    end
+  end
+
+  @tag login_as: "max"
   test "lists all the user's posts on index", %{conn: conn, user: user} do
     user_post = insert_post(user, title: "User post", body: "")
     other_post = insert_post(insert_user(username: "other"),
