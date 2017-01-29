@@ -1,7 +1,7 @@
 defmodule Blog.UserController do
   use Blog.Web, :controller
 
-  plug :authenticate when action in [:index]
+  plug :authenticate_user when action in [:index]
 
   alias Blog.User
 
@@ -25,17 +25,6 @@ defmodule Blog.UserController do
         |> redirect(to: user_path(conn, :index))
       {:error, changeset} ->
         render(conn, "new.html", changeset: changeset)
-    end
-  end
-
-  defp authenticate(conn, _opts) do
-    if conn.assigns.current_user do
-      conn
-    else
-      conn
-      |> put_flash(:error, "You must be logged in to access that page.")
-      |> redirect(to: session_path(conn, :new))
-      |> halt()
     end
   end
 end

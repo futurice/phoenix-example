@@ -1,6 +1,8 @@
 defmodule Blog.Auth do
   import Plug.Conn
   import Comeonin.Bcrypt, only: [checkpw: 2, dummy_checkpw: 0]
+  import Phoenix.Controller
+  alias Blog.Router.Helpers
 
   def init(opts) do
     Keyword.fetch!(opts, :repo)
@@ -10,6 +12,17 @@ defmodule Blog.Auth do
     user_id = get_session(conn, :user_id)
     user = user_id && repo.get(Blog.User, user_id)
     assign(conn, :current_user, user)
+  end
+
+  def authenticate_user(conn, _opts) do
+    if conn.assigns.current_user do
+      conn
+    else
+      conn
+      |> put_flash(:error, "You must be logged in to access that page.")
+      |> redirect(to: Helpers.session_path(conn, :new))
+      |> halt()
+    end
   end
 
   def login(conn, user) do

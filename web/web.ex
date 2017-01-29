@@ -36,6 +36,7 @@ defmodule Blog.Web do
 
       import Blog.Router.Helpers
       import Blog.Gettext
+      import Blog.Auth, only: [authenticate_user: 2]
     end
   end
 
@@ -58,6 +59,8 @@ defmodule Blog.Web do
   def router do
     quote do
       use Phoenix.Router
+
+      import Blog.Auth, only: [authenticate_user: 2]
     end
   end
 
