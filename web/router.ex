@@ -7,6 +7,7 @@ defmodule Blog.Router do
     plug :fetch_flash
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug Blog.Auth, repo: Blog.Repo
   end
 
   pipeline :api do
@@ -17,6 +18,8 @@ defmodule Blog.Router do
     pipe_through :browser # Use the default browser stack
 
     get "/", PostController, :index
+    resources "/users", UserController, only: [:index, :new, :create]
+    resources "/sessions", SessionController, only: [:new, :create, :delete]
   end
 
   # Other scopes may use custom stacks.
