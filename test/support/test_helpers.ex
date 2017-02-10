@@ -2,11 +2,11 @@ defmodule Blog.TestHelpers do
   alias Blog.Repo
 
   def insert_user(attrs \\ %{}) do
-    changes = Dict.merge(%{
+    changes = Enum.into(attrs, %{
       name: "Some user",
       username: "user#{Base.encode16(:crypto.strong_rand_bytes(8))}",
       password: "supersecret",
-    }, attrs)
+    })
 
     %Blog.User{}
     |> Blog.User.registration_changeset(changes)
