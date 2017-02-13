@@ -6,6 +6,7 @@ defmodule Blog.User do
     field :username, :string
     field :password, :string, virtual: true
     field :password_hash, :string
+    has_many :posts, Blog.Post, foreign_key: :author_id
 
     timestamps()
   end
@@ -14,6 +15,7 @@ defmodule Blog.User do
     struct
     |> cast(params, ~w(name username))
     |> validate_required([:name, :username])
+    |> unique_constraint(:username)
   end
 
   def registration_changeset(struct, params) do

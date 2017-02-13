@@ -21,6 +21,7 @@ defmodule Blog.ModelCase do
       import Ecto
       import Ecto.Changeset
       import Ecto.Query
+      import Blog.TestHelpers
       import Blog.ModelCase
     end
   end

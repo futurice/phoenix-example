@@ -4,6 +4,8 @@ defmodule Blog.Post do
   schema "posts" do
     field :title, :string
     field :body, :string
+    belongs_to :author, Blog.User
+    belongs_to :category, Blog.Category
 
     timestamps()
   end
@@ -13,7 +15,8 @@ defmodule Blog.Post do
   """
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:title, :body])
+    |> cast(params, [:title, :body, :category_id])
     |> validate_required([:title, :body])
+    |> assoc_constraint(:category)
   end
 end
