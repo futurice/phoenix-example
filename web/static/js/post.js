@@ -10,6 +10,8 @@ let Post = {
     let submitButton = document.getElementById("msg-submit")
     let postChannel = socket.channel("posts:" + postId)
 
+    postChannel.on("ping", ({count}) => console.log("PING", count))
+
     postChannel.join()
       .receive("ok", resp => console.log("joined the post channel", resp))
       .receive("error", reason => console.log("join failed", reason))
