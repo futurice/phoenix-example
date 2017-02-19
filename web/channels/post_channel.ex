@@ -2,13 +2,15 @@ defmodule Blog.PostChannel do
   use Blog.Web, :channel
 
   def join("posts:" <> post_id, _params, socket) do
-    :timer.send_interval(5_000, :ping)
     {:ok, socket}
   end
 
-  def handle_info(:ping, socket) do
-    count = socket.assigns[:count] || 1
-    push socket, "ping", %{count: count}
-    {:noreply, assign(socket, :count, count + 1)}
+  def handle_in("new_comment", params, socket) do
+    broadcast! socket, "new_comment", %{
+      user: %{username: "anon"},
+      body: params["body"],
+    }
+
+    {:reply, :ok, socket}
   end
 end
