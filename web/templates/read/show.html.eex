@@ -1,0 +1,33 @@
+<h2><%= @post.title %></h2>
+<div class="row">
+  <div class="col-sm-7">
+    <article>
+      <%= @post.body %>
+    </article>
+  </div>
+  <div class="col-sm-5">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Comments</h3>
+      </div>
+      <div class="msg-container" class="panel-body annotations">
+
+      </div>
+      <div class="panel-footer">
+        <textarea
+          id="msg-input"
+          rows="3"
+          class="form-control"
+          placeholder="Comment…"
+        ></textarea>
+        <button
+          id="msg-submit"
+          class="btn btn-primary form-control"
+          type="submit"
+        >
+          Post
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

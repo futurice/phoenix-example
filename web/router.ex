@@ -20,6 +20,7 @@ defmodule Blog.Router do
     get "/", PostController, :feed
     resources "/sessions", SessionController, only: [:new, :create, :delete]
     resources "/users", UserController, only: [:index, :new, :create]
+    get "/read/:id", ReadController, :show
   end
 
   scope "/manage", Blog do
