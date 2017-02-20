@@ -8,6 +8,7 @@ defmodule Blog.Post do
     field :slug, :string
     belongs_to :author, Blog.User
     belongs_to :category, Blog.Category
+    has_many :comments, Blog.Comment
 
     timestamps()
   end
