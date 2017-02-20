@@ -23,7 +23,9 @@ let Post = {
     })
 
     postChannel.join()
-      .receive("ok", resp => console.log("joined the post channel", resp))
+      .receive("ok", ({comments}) => {
+        comments.forEach(comment => this.renderComment(msgContainer, comment))
+      })
       .receive("error", reason => console.log("join failed", reason))
   },
 
