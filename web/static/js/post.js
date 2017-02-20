@@ -19,11 +19,16 @@ let Post = {
     })
 
     postChannel.on("new_comment", (resp) => {
+      postChannel.params.last_seen_id = resp.id
       this.renderComment(msgContainer, resp)
     })
 
     postChannel.join()
       .receive("ok", ({comments}) => {
+        let ids = comments.map(comment => comment.id)
+        if (ids.length > 0) {
+          postChannel.params.last_seen_id = Math.max(...ids)
+        }
         comments.forEach(comment => this.renderComment(msgContainer, comment))
       })
       .receive("error", reason => console.log("join failed", reason))

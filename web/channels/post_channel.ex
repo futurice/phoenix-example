@@ -2,13 +2,15 @@ defmodule Blog.PostChannel do
   use Blog.Web, :channel
   alias Blog.CommentView
 
-  def join("posts:" <> post_id, _params, socket) do
+  def join("posts:" <> post_id, params, socket) do
+    last_seen_id = params["last_seen_id"] || 0
     post_id = String.to_integer(post_id)
     post = Repo.get!(Blog.Post, post_id)
 
     comments = Repo.all(
-      from a in assoc(post, :comments),
-        order_by: [asc: a.inserted_at],
+      from c in assoc(post, :comments),
+        where: c.id > ^last_seen_id,
+        order_by: [asc: c.id],
         limit: 200,
         preload: [:author]
     )
