@@ -31,14 +31,41 @@ defmodule Blog.PostChannel do
 
     case Repo.insert(changeset) do
       {:ok, comment} ->
-        broadcast! socket, "new_comment", %{
-          id: comment.id,
-          user: Blog.UserView.render("user.json", %{user: user}),
-          body: comment.body,
-        }
+        broadcast_comment(socket, comment)
+        Task.start_link(fn -> compute_additional_info(comment, socket) end)
         {:reply, :ok, socket}
+
       {:error, changeset} ->
         {:reply, {:error, %{errors: changeset}}, socket}
+    end
+  end
+
+  defp broadcast_comment(socket, comment) do
+    # %{
+    #   id: comment.id,
+    #   user: Blog.UserView.render("user.json", %{user: user}),
+    #   body: comment.body,
+    # }
+
+    comment = Repo.preload(comment, :author)
+    rendered_comment = Phoenix.View.render(CommentView, "comment.json", %{
+      comment: comment
+    })
+    broadcast! socket, "new_comment", rendered_comment
+  end
+
+  defp compute_additional_info(comment, socket) do
+    for result <- Blog.InfoSys.compute(comment.body, limit: 1, timeout: 10_000) do
+      attrs = %{url: result.url, body: result.text}
+      info_changeset =
+        Repo.get_by!(Blog.User, username: result.backend)
+        |> build_assoc(:comments, post_id: comment.post_id)
+        |> Blog.Comment.changeset(attrs)
+
+      case Repo.insert(info_changeset) do
+        {:ok, info_comment} -> broadcast_comment(socket, info_comment)
+        {:error, _changeset} -> :ignore
+      end
     end
   end
 end

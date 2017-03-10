@@ -14,6 +14,7 @@ defmodule Blog do
       supervisor(Blog.Endpoint, []),
       # Start your own worker by calling: Blog.Worker.start_link(arg1, arg2, arg3)
       # worker(Blog.Worker, [arg1, arg2, arg3]),
+      supervisor(Blog.InfoSys.Supervisor, [])
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html
