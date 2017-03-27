@@ -1,6 +1,6 @@
-defmodule Blog.InfoSys.Wolfram do
+defmodule InfoSys.Wolfram do
   import SweetXml
-  alias Blog.InfoSys.Result
+  alias InfoSys.Result
 
   def start_link(query, query_ref, owner, limit) do
     Task.start_link(__MODULE__, :fetch, [query, query_ref, owner, limit])
@@ -32,5 +32,5 @@ defmodule Blog.InfoSys.Wolfram do
     body
   end
 
-  defp app_id, do: Application.get_env(:blog, :wolfram)[:app_id]
+  defp app_id, do: Application.get_env(:info_sys, :wolfram)[:app_id]
 end

@@ -1,4 +1,4 @@
-defmodule Blog.InfoSys.Supervisor do
+defmodule InfoSys.Supervisor do
   use Supervisor
 
   def start_link() do
@@ -7,7 +7,7 @@ defmodule Blog.InfoSys.Supervisor do
 
   def init(_opts) do
     children = [
-      worker(Blog.InfoSys, [], restart: :temporary)
+      worker(InfoSys, [], restart: :temporary)
     ]
 
     supervise children, strategy: :simple_one_for_one

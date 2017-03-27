@@ -55,7 +55,7 @@ defmodule Blog.PostChannel do
   end
 
   defp compute_additional_info(comment, socket) do
-    for result <- Blog.InfoSys.compute(comment.body, limit: 1, timeout: 10_000) do
+    for result <- InfoSys.compute(comment.body, limit: 1, timeout: 10_000) do
       attrs = %{url: result.url, body: result.text}
       info_changeset =
         Repo.get_by!(Blog.User, username: result.backend)
