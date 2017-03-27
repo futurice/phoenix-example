@@ -14,6 +14,6 @@ alias Blog.Repo
 alias Blog.Category
 
 for category <- ["Coding", "World Domination", "Testing"] do
-  Repo.get_by!(Category, name: category) ||
+  Repo.get_by(Category, name: category) ||
     Repo.insert!(%Category{name: category})
 end
